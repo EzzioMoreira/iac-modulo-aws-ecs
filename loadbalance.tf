@@ -1,8 +1,9 @@
 resource "aws_lb" "iac_lb" {
+  count                      = local.cluster_count
   name                       = "load-balance-${var.cluster_name}"
   internal                   = false #tfsec:ignore:AWS005
   load_balancer_type         = "application"
-  security_groups            = aws_security_group.allow_acesso[*].id
+  security_groups            = aws_security_group.allow_access[*].id
   subnets                    = var.subnet_ids
   drop_invalid_header_fields = true
 
@@ -12,6 +13,7 @@ resource "aws_lb" "iac_lb" {
 }
 
 resource "aws_lb_target_group" "iac_tg" {
+  count       = local.cluster_count
   name        = "target-group-${var.cluster_name}"
   port        = var.app_port
   protocol    = var.protocol
@@ -20,7 +22,8 @@ resource "aws_lb_target_group" "iac_tg" {
 }
 
 resource "aws_lb_listener" "iac_listener" {
-  load_balancer_arn = aws_lb.iac_lb.arn
+  count             = local.cluster_count
+  load_balancer_arn = aws_lb.iac_lb[0].arn
   port              = var.app_port
   protocol          = var.protocol #tfsec:ignore:AWS004
   ssl_policy        = var.policy_ssl
@@ -28,6 +31,6 @@ resource "aws_lb_listener" "iac_listener" {
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.iac_tg.arn
+    target_group_arn = aws_lb_target_group.iac_tg[0].arn
   }
 }

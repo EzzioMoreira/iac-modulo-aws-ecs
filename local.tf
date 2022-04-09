@@ -1,4 +1,5 @@
 locals {
+  cluster_count = var.create_cluster ? 1 : 0
   tags = {
     Env          = "production"
     Team         = "tematico-terraform"

@@ -1,7 +1,7 @@
 module "ecs_mentoria" {
   source         = "../"
-  create_cluster = true
-  app_port       = 80
+  create_cluster = false
+  #app_port       = 80
   region         = "us-east-1"
   app_count      = 1
   fargate_cpu    = 256
@@ -9,12 +9,12 @@ module "ecs_mentoria" {
   subnet_ids     = ["subnet-06399d8a8ab548ac5", "subnet-0736facc920782b02"]
   vpc_id         = "vpc-0d5dbc81d1124c013"
   protocol       = "HTTP"
-  family_name    = "mentoria"
-  service_name   = "mentoria"
+  family_name    = "mentoria-app2"
+  service_name   = "mentoria-app2"
   cluster_name   = "mentoria"
   template_container = [{
-    name      = "nginx"
-    image     = "httpd"
+    name      = "app-2"
+    image     = "nginx"
     cpu       = 128
     memory    = 256
     essential = true
@@ -25,9 +25,9 @@ module "ecs_mentoria" {
     logConfiguration = {
       logDriver = "awslogs"
       options = {
-        awslogs-group         = "mentoria-iac"
+        awslogs-group         = "mentoria-iac-app2"
         awslogs-region        = "us-east-1"
-        awslogs-stream-prefix = "nginx"
+        awslogs-stream-prefix = "app2"
 
       }
     }
@@ -35,5 +35,5 @@ module "ecs_mentoria" {
 }
 
 #output "load_balancer_dns_name" {
-#  value = "http://${module.ecs_mentoria.loadbalance_dns_name}"
+#  value = "http://${module.ecs_mentoria[0].loadbalance_dns_name}"
 #}

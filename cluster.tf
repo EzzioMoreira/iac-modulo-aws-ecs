@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "cluster_iac" {
-  count = var.cria_cluster ? 1 : 0
+  count = local.cluster_count
   name  = var.cluster_name
 
   setting {

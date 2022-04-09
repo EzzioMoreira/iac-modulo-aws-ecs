@@ -1,4 +1,4 @@
-variable "cria_cluster" {
+variable "create_cluster" {
   type        = bool
   default     = true
   description = "Define se cluster será criado"
@@ -63,6 +63,7 @@ variable "vpc_id" {
 
 variable "app_port" {
   type        = number
+  default     = null
   description = "Porta que será utilizada pela aplicação"
 }
 
